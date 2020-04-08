@@ -30,6 +30,18 @@ DEFAULT GETDATE() FOR LastLoginTime
 
 INSERT INTO Users (Username, [Password], ProfilePicture, IsDeleted)
 VALUES 
-				  ('KiriLl', '123456', NULL, 0)
+				  ('KiriLl', '123456', NULL, 0),
+				  ('KiriLl', '12345ee6', NULL, 0)
+
+ALTER TABLE Users
+DROP CONSTRAINT PK_CompositeIdUsername
+
+ALTER TABLE Users
+ADD CONSTRAINT PK_Id
+PRIMARY KEY (Id)
+
+ALTER TABLE Users
+ADD CONSTRAINT UK_Username
+UNIQUE (Username)
 
 SELECT * FROM Users
