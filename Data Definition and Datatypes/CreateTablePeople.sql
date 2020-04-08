@@ -11,10 +11,11 @@ CREATE TABLE People(
 	Biography NVARCHAR(MAX)
 )
 
-INSERT INTO People([Name], Picture, Height, [Weight], Gender, Birthdate, Biography)
+INSERT INTO People
+			([Name], Picture, Height, [Weight], Gender, Birthdate, Biography)
 VALUES
-				  ('Pesho', NULL, 1.76, 76, 'm', '12.12.1999',NULL),
-				  ('Gosho', NULL, 1.76, 76, 'm', '12.12.1989',NULL),
-				  ('Misho', NULL, 1.76, 76, 'm', '12.12.1996',NULL),
-				  ('Iva', NULL, 1.76, 76, 'f', '12.12.2000',NULL),
-				  ('Petq', NULL, 1.76, 76, 'f', '12.3.1995',NULL)
+			('Pesho', NULL, 1.76, 76, 'm', '12.12.1999',NULL),
+			('Gosho', NULL, 1.76, 76, 'm', '12.12.1989',NULL),
+			('Misho', NULL, 1.76, 76, 'm', '12.12.1996',NULL),
+			('Iva', NULL, 1.76, 76, 'f', '12.12.2000',NULL),
+			('Petq', NULL, 1.76, 76, 'f', '12.3.1995',NULL)
