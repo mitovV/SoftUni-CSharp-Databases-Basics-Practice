@@ -1,3 +1,3 @@
-   SELECT FirstName,LastName
-	 FROM Employees
-WHERE NOT JobTitle LIKE '%engineer%'
+SELECT FirstName,LastName
+  FROM Employees
+ WHERE JobTitle NOT LIKE '%engineer%'
