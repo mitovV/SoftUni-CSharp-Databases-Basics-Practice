@@ -1,4 +1,4 @@
-  SELECT TOP 5 e.FirstName, e.LastName, p.[Name]
+  SELECT TOP 5 e.EmployeeID, e.FirstName, p.[Name] AS ProjectName
     FROM Employees e
     JOIN EmployeesProjects ep 
       ON ep.EmployeeID = e.EmployeeID
