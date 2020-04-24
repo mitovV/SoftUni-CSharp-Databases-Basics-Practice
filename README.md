@@ -1,2 +1,1 @@
-# CSharp-Databases-Basics-Practice
-CSharp-Databases-Basics-Practice
+# SoftUni-CSharp-Databases-Basics-Practice
