@@ -6,7 +6,7 @@
 
     class Startup
     {
-        private static string connectionString = @"Server=CODINGMANIA\SQLEXPRESS;Database=MinionsDB;Integrated Security=true;";
+        private static readonly string connectionString = @"Server=CODINGMANIA\SQLEXPRESS;Database=MinionsDB;Integrated Security=true;";
 
         static void Main()
         {
