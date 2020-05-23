@@ -12,7 +12,7 @@
 
     public class StartUp
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
             Mapper.Initialize(cfg => cfg.AddProfile<ProductShopProfile>());
 
