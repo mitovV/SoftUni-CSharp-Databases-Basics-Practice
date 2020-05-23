@@ -2,13 +2,17 @@
 {
     using System;
     using System.IO;
+    using System.Linq;
     using System.Xml.Serialization;
 
     using Data;
+    using Dtos.Export;
     using Dtos.Import;
     using Models;
 
     using AutoMapper;
+    using AutoMapper.QueryableExtensions;
+    using System.Text;
 
     public class StartUp
     {
@@ -20,7 +24,7 @@
             {
                 var data = File.ReadAllText("../../../Datasets/categories-products.xml");
 
-                var result = ImportCategoryProducts(db, data);
+                var result = GetProductsInRange(db);
 
                 Console.WriteLine(result);
             }
@@ -101,6 +105,35 @@
             context.SaveChanges();
 
             return $"Successfully imported {categoryProducts.Length}";
+        }
+
+        public static string GetProductsInRange(ProductShopContext context)
+        {
+            var productsDto = context
+                .Products
+                .Where(p => p.Price >= 500 && p.Price <= 1000)
+                .OrderBy(p => p.Price)
+                .Take(10)
+                .Select(p => new ExportProductDto() 
+                {
+                    Name = p.Name,
+                    Price = p.Price,
+                    Buyer = $"{p.Buyer.FirstName} {p.Buyer.LastName}"
+                })
+                .ToArray();
+
+            var serializer = new XmlSerializer(typeof(ExportProductDto[]), new XmlRootAttribute("Products"));
+
+            var sb = new StringBuilder();
+            var namespaces = new XmlSerializerNamespaces();
+            namespaces.Add("", "");
+
+            using (var writer = new StringWriter(sb))
+            {
+                serializer.Serialize(writer, productsDto, namespaces);
+            }
+
+            return sb.ToString().TrimEnd();
         }
     }
 }

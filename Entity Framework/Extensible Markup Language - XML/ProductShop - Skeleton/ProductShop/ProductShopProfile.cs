@@ -1,10 +1,10 @@
 ﻿namespace ProductShop
 {
+    using Dtos.Export;
     using Dtos.Import;
     using Models;
 
     using AutoMapper;
-    using ProductShop.Dtos.Export;
 
     public class ProductShopProfile : Profile
     {
@@ -14,7 +14,6 @@
             this.CreateMap<ImportProductDto, Product>();
             this.CreateMap<ImportCategorieDto, Category>();
             this.CreateMap<ImportCategoryProductDto, CategoryProduct>();
-            this.CreateMap<Product, ExportProductDto>();
         }
     }
 }

@@ -10,5 +10,8 @@
 
         [XmlElement("price")]
         public decimal Price { get; set; }
+
+        [XmlElement(ElementName = "buyer")]
+        public string Buyer { get; set; }
     }
 }
