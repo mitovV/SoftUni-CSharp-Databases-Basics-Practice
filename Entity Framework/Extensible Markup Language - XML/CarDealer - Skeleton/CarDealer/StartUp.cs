@@ -9,6 +9,7 @@
     using Models;
 
     using AutoMapper;
+    using System.Linq;
 
     public class StartUp
     {
@@ -18,9 +19,9 @@
 
             using (var db = new CarDealerContext())
             {
-                var data = File.ReadAllText("../../../Datasets/suppliers.xml");
+                var data = File.ReadAllText("../../../Datasets/parts.xml");
 
-                var result = ImportSuppliers(db, data);
+                var result = ImportParts(db, data);
 
                 Console.WriteLine(result);
 
@@ -35,7 +36,7 @@
 
             using (var reader = new StringReader(inputXml))
             {
-                supplierDtos = (ImportSupplierDto[])serializer.Deserialize(reader); 
+                supplierDtos = (ImportSupplierDto[])serializer.Deserialize(reader);
             }
 
             var suppliers = Mapper.Map<Supplier[]>(supplierDtos);
@@ -44,6 +45,27 @@
             context.SaveChanges();
 
             return $"Successfully imported {suppliers.Length}";
+        }
+
+        public static string ImportParts(CarDealerContext context, string inputXml)
+        {
+            var serializer = new XmlSerializer(typeof(ImportPartDto[]), new XmlRootAttribute("Parts"));
+
+            ImportPartDto[] partDtos;
+
+            using (var reader = new StringReader(inputXml))
+            {
+                partDtos = ((ImportPartDto[])serializer.Deserialize(reader))
+                    .Where(p => context.Suppliers.Any(s => s.Id == p.SupplierId))
+                    .ToArray();
+            }
+
+            var parts = Mapper.Map<Part[]>(partDtos);
+
+            context.Parts.AddRange(parts);
+            context.SaveChanges();
+
+            return $"Successfully imported {parts.Length}";
         }
     }
 }

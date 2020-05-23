@@ -10,6 +10,7 @@
         public CarDealerProfile()
         {
             this.CreateMap<ImportSupplierDto, Supplier>();
+            this.CreateMap<ImportPartDto, Part>();
         }
     }
 }
