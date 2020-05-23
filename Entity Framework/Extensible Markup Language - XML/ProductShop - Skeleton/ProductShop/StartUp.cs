@@ -6,9 +6,9 @@
 
     using Data;
     using Dtos.Import;
+    using Models;
 
     using AutoMapper;
-    using ProductShop.Models;
 
     public class StartUp
     {
@@ -18,9 +18,9 @@
 
             using (var db = new ProductShopContext())
             {
-                var data = File.ReadAllText("../../../Datasets/products.xml");
+                var data = File.ReadAllText("../../../Datasets/categories.xml");
 
-                var result = ImportProducts(db, data);
+                var result = ImportCategories(db, data);
 
                 Console.WriteLine(result);
             }
@@ -63,6 +63,25 @@
             context.SaveChanges();
 
             return $"Successfully imported {products.Length}";
+        }
+
+        public static string ImportCategories(ProductShopContext context, string inputXml)
+        {
+            var serializer = new XmlSerializer(typeof(ImportCategorieDto[]), new XmlRootAttribute("Categories"));
+
+            ImportCategorieDto[] importCategorieDtos;
+
+            using (var reader = new StringReader(inputXml))
+            {
+                importCategorieDtos = (ImportCategorieDto[])serializer.Deserialize(reader);
+            }
+
+            var categories = Mapper.Map<Category[]>(importCategorieDtos);
+
+            context.Categories.AddRange(categories);
+            context.SaveChanges();
+
+            return $"Successfully imported {categories.Length}";
         }
     }
 }
