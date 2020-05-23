@@ -18,9 +18,9 @@
 
             using (var db = new ProductShopContext())
             {
-                var data = File.ReadAllText("../../../Datasets/categories.xml");
+                var data = File.ReadAllText("../../../Datasets/categories-products.xml");
 
-                var result = ImportCategories(db, data);
+                var result = ImportCategoryProducts(db, data);
 
                 Console.WriteLine(result);
             }
@@ -82,6 +82,25 @@
             context.SaveChanges();
 
             return $"Successfully imported {categories.Length}";
+        }
+
+        public static string ImportCategoryProducts(ProductShopContext context, string inputXml)
+        {
+            var serializer = new XmlSerializer(typeof(ImportCategoryProductDto[]), new XmlRootAttribute("CategoryProducts"));
+
+            ImportCategoryProductDto[] importCategoryProductDtos;
+
+            using (var reader = new StringReader(inputXml))
+            {
+                importCategoryProductDtos = (ImportCategoryProductDto[])serializer.Deserialize(reader);
+            }
+
+            var categoryProducts = Mapper.Map<CategoryProduct[]>(importCategoryProductDtos);
+
+            context.CategoryProducts.AddRange(categoryProducts);
+            context.SaveChanges();
+
+            return $"Successfully imported {categoryProducts.Length}";
         }
     }
 }
