@@ -3,12 +3,15 @@
     using System.Xml.Serialization;
 
     [XmlType("Product")]
-    public class ExportProductDto
+    public class ExportProductInRangeDto
     {
         [XmlElement("name")]
         public string Name { get; set; }
 
         [XmlElement("price")]
         public decimal Price { get; set; }
+
+        [XmlElement(ElementName = "buyer")]
+        public string Buyer { get; set; }
     }
 }
