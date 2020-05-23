@@ -24,7 +24,7 @@
             {
                 var data = File.ReadAllText("../../../Datasets/categories-products.xml");
 
-                var result = GetSoldProducts(db);
+                var result = GetCategoriesByProductsCount(db);
 
                 Console.WriteLine(result);
             }
@@ -173,6 +173,35 @@
             }
 
             return sb.ToString().TrimEnd();
+        }
+
+        public static string GetCategoriesByProductsCount(ProductShopContext context)
+        {
+            var categories = context
+                .Categories
+                .Select(c => new ExportCategorieDto()
+                {
+                    Name = c.Name,
+                    Count = c.CategoryProducts.Count(),
+                    AveragePrice = c.CategoryProducts.Average(cp => cp.Product.Price),
+                    TotalRevenue = c.CategoryProducts.Sum(cp => cp.Product.Price)
+                })
+                .OrderByDescending(c => c.Count)
+                .ThenBy(c => c.TotalRevenue)
+                .ToArray();
+
+            var sb = new StringBuilder();
+
+            var serializer = new XmlSerializer(typeof(ExportCategorieDto[]),new XmlRootAttribute("Categories"));
+            var namespaces = new XmlSerializerNamespaces();
+            namespaces.Add("", "");
+
+            using (var writer = new StringWriter(sb))
+            {
+                serializer.Serialize(writer, categories, namespaces);
+            }
+
+            return sb.ToString().Trim();
         }
     }
 }
