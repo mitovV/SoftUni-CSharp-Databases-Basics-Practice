@@ -11,6 +11,8 @@
     using Models;
 
     using AutoMapper;
+    using CarDealer.Dtos.Export;
+    using System.Text;
 
     public class StartUp
     {
@@ -22,7 +24,7 @@
             {
                 var data = File.ReadAllText("../../../Datasets/sales.xml");
 
-                var result = ImportSales(db, data);
+                var result = GetCarsWithDistance(db);
 
                 Console.WriteLine(result);
 
@@ -140,14 +142,14 @@
 
         public static string ImportSales(CarDealerContext context, string inputXml)
         {
-            var serializer = new XmlSerializer(typeof(ImportSaleDto[]),new XmlRootAttribute("Sales"));
+            var serializer = new XmlSerializer(typeof(ImportSaleDto[]), new XmlRootAttribute("Sales"));
 
             ImportSaleDto[] saleDtos;
 
             using (var reader = new StringReader(inputXml))
             {
                 saleDtos = ((ImportSaleDto[])serializer.Deserialize(reader))
-                    .Where(sDto => context.Cars.Any(c =>sDto.CarId == c.Id))
+                    .Where(sDto => context.Cars.Any(c => sDto.CarId == c.Id))
                     .ToArray();
             }
 
@@ -157,6 +159,37 @@
             context.SaveChanges();
 
             return $"Successfully imported {sales.Length}";
+        }
+
+        public static string GetCarsWithDistance(CarDealerContext context)
+        {
+            var cars = context
+                .Cars
+                .Where(c => c.TravelledDistance > 2000000)
+                .OrderBy(c => c.Make)
+                .ThenBy(c => c.Model)
+                .Take(10)
+                .Select(c => new ExportCarDto() 
+                {
+                    Make = c.Make,
+                    Model = c.Model,
+                    TravelledDistance = c.TravelledDistance
+                })
+                .ToArray();
+
+            var serializer = new XmlSerializer(typeof(ExportCarDto[]), new XmlRootAttribute("cars"));
+
+            var sb = new StringBuilder();
+
+            var namespaces = new XmlSerializerNamespaces();
+            namespaces.Add("", "");
+
+            using (var writer = new StringWriter(sb))
+            {
+                serializer.Serialize(writer, cars, namespaces);
+            }
+
+            return sb.ToString().Trim();
         }
     }
 }
