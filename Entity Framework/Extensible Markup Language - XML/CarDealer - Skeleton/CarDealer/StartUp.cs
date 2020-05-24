@@ -169,7 +169,7 @@
                 .OrderBy(c => c.Make)
                 .ThenBy(c => c.Model)
                 .Take(10)
-                .Select(c => new ExportCarDto() 
+                .Select(c => new ExportCarDto()
                 {
                     Make = c.Make,
                     Model = c.Model,
@@ -186,6 +186,36 @@
 
             using (var writer = new StringWriter(sb))
             {
+                serializer.Serialize(writer, cars, namespaces);
+            }
+
+            return sb.ToString().Trim();
+        }
+
+        public static string GetCarsFromMakeBmw(CarDealerContext context)
+        {
+            var cars = context
+                .Cars
+                .Where(c => c.Make == "BMW")
+                .OrderBy(c => c.Model)
+                .ThenByDescending(c => c.TravelledDistance)
+                .Select(c => new ExportCarFromMakeBmwDto()
+                {
+                    Id = c.Id,
+                    Model = c.Model,
+                    TravelledDistance = c.TravelledDistance
+                })
+                .ToArray();
+
+            var serializer = new XmlSerializer(typeof(ExportCarFromMakeBmwDto[]), new XmlRootAttribute("cars"));
+
+            var sb = new StringBuilder();
+
+            using (var writer = new StringWriter(sb))
+            {
+                var namespaces = new XmlSerializerNamespaces();
+                namespaces.Add("", "");
+
                 serializer.Serialize(writer, cars, namespaces);
             }
 
