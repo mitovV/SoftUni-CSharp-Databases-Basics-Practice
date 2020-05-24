@@ -24,7 +24,7 @@
             {
                 var data = File.ReadAllText("../../../Datasets/sales.xml");
 
-                var result = GetCarsWithTheirListOfParts(db);
+                var result = GetTotalSalesByCustomer(db);
 
                 Console.WriteLine(result);
 
@@ -283,6 +283,35 @@
                 namespaces.Add("", "");
 
                 serializer.Serialize(writer, cars, namespaces);
+            }
+
+            return sb.ToString().Trim();
+        }
+
+        public static string GetTotalSalesByCustomer(CarDealerContext context)
+        {
+            var customers = context
+                .Customers
+                .Where(c => c.Sales.Any())
+                .Select(c => new ExportSalesByCustomerDto()
+                {
+                    FullName = c.Name,
+                    BoughtCars = c.Sales.Count(),
+                    SpendMoney = c.Sales.Sum(s => s.Car.PartCars.Sum(pc => pc.Part.Price))
+                })
+                .OrderByDescending(c => c.SpendMoney)
+                .ToArray();
+
+            var sb = new StringBuilder();
+
+            using (var writer = new StringWriter(sb))
+            {
+                var serializer = new XmlSerializer(typeof(ExportSalesByCustomerDto[]), new XmlRootAttribute("customers"));
+
+                var namespaces = new XmlSerializerNamespaces();
+                namespaces.Add("", "");
+
+                serializer.Serialize(writer, customers, namespaces);
             }
 
             return sb.ToString().Trim();
