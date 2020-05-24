@@ -24,7 +24,7 @@
             {
                 var data = File.ReadAllText("../../../Datasets/sales.xml");
 
-                var result = GetCarsWithDistance(db);
+                var result = GetLocalSuppliers(db);
 
                 Console.WriteLine(result);
 
@@ -217,6 +217,35 @@
                 namespaces.Add("", "");
 
                 serializer.Serialize(writer, cars, namespaces);
+            }
+
+            return sb.ToString().Trim();
+        }
+
+        public static string GetLocalSuppliers(CarDealerContext context)
+        {
+            var suppliers = context
+                .Suppliers
+                .Where(s => !s.IsImporter)
+                .Select(s => new ExportLocalSupplierDto()
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    PartsCount = s.Parts.Count()
+                })
+                .ToArray();
+
+
+            var sb = new StringBuilder();
+
+            using (var writer = new StringWriter(sb))
+            {
+                var serializer = new XmlSerializer(typeof(ExportLocalSupplierDto[]), new XmlRootAttribute("suppliers"));
+
+                var namespaces = new XmlSerializerNamespaces();
+                namespaces.Add("", "");
+
+                serializer.Serialize(writer, suppliers, namespaces);
             }
 
             return sb.ToString().Trim();
