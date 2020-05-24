@@ -13,6 +13,7 @@
     using AutoMapper;
     using CarDealer.Dtos.Export;
     using System.Text;
+    using System.Xml;
 
     public class StartUp
     {
@@ -24,7 +25,7 @@
             {
                 var data = File.ReadAllText("../../../Datasets/sales.xml");
 
-                var result = GetTotalSalesByCustomer(db);
+                var result = ImportSales(db,data);
 
                 Console.WriteLine(result);
 
@@ -149,7 +150,7 @@
             using (var reader = new StringReader(inputXml))
             {
                 saleDtos = ((ImportSaleDto[])serializer.Deserialize(reader))
-                    .Where(sDto => context.Cars.Any(c => sDto.CarId == c.Id))
+                    .Where(sDto => context.Cars.Any(c => c.Id == sDto.CarId))
                     .ToArray();
             }
 
@@ -312,6 +313,41 @@
                 namespaces.Add("", "");
 
                 serializer.Serialize(writer, customers, namespaces);
+            }
+
+            return sb.ToString().Trim();
+        }
+
+        public static string GetSalesWithAppliedDiscount(CarDealerContext context)
+        {
+            var sales = context
+                .Sales
+                .Select(s => new ExportSaleWithAppliedDiscountDto()
+                {
+                    Car = new ExportCarWithAttributeDto()
+                    {
+                        Make = s.Car.Make,
+                        Model = s.Car.Model,
+                        TravelledDistance = s.Car.TravelledDistance
+                    },
+                    Discount = s.Discount,
+                    CustomerName = s.Customer.Name,
+                    Price = s.Car.PartCars.Sum(p => p.Part.Price),
+                    PriceWirhDiscount = s.Car.PartCars.Sum(p => p.Part.Price) - s.Car.PartCars.Sum(p => p.Part.Price) * s.Discount / 100
+                })
+                .ToArray();
+
+
+            var sb = new StringBuilder();
+
+            using (var writer = new StringWriter(sb))
+            {
+                var serializer = new XmlSerializer(typeof(ExportSaleWithAppliedDiscountDto[]), new XmlRootAttribute("sales"));
+
+                var namespaces = new XmlSerializerNamespaces();
+                namespaces.Add("", "");
+
+                serializer.Serialize(writer, sales, namespaces);
             }
 
             return sb.ToString().Trim();
