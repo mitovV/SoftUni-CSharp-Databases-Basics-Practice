@@ -20,15 +20,16 @@
 
             using (var db = new CarDealerContext())
             {
-                var data = File.ReadAllText("../../../Datasets/cars.xml");
+                var data = File.ReadAllText("../../../Datasets/customers.xml");
 
-                var result = ImportCars(db, data);
+                var result = ImportCustomers(db, data);
 
                 Console.WriteLine(result);
 
             }
 
         }
+
         public static string ImportSuppliers(CarDealerContext context, string inputXml)
         {
             var serializer = new XmlSerializer(typeof(ImportSupplierDto[]), new XmlRootAttribute("Suppliers"));
@@ -117,6 +118,25 @@
             context.SaveChanges();
 
             return $"Successfully imported {cars.Count}";
+        }
+
+        public static string ImportCustomers(CarDealerContext context, string inputXml)
+        {
+            var serializer = new XmlSerializer(typeof(ImportCustomerDto[]), new XmlRootAttribute("Customers"));
+
+            ImportCustomerDto[] customerDtos;
+
+            using (var reader = new StringReader(inputXml))
+            {
+                customerDtos = (ImportCustomerDto[])serializer.Deserialize(reader);
+            }
+
+            var customers = Mapper.Map<Customer[]>(customerDtos);
+
+            context.Customers.AddRange(customers);
+            context.SaveChanges();
+
+            return $"Successfully imported {customers.Length}";
         }
     }
 }
