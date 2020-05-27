@@ -8,6 +8,11 @@
 
     public class Book
     {
+        public Book()
+        {
+            this.AuthorsBooks = new HashSet<AuthorBook>();
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -18,7 +23,7 @@
         [Required]
         public Genre Genre { get; set; }
 
-        [Range(typeof(decimal), "0.01", null)]
+        [Range(typeof(decimal), "0.01", "79228162514264337593543950335")]
         public decimal Price { get; set; }
 
         [Range(50, 5000)]

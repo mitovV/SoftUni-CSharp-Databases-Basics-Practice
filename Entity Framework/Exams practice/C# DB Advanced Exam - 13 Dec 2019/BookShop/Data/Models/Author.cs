@@ -21,6 +21,7 @@
         public string Email { get; set; }
 
         [Required]
+        [StringLength(12, MinimumLength =12)]
         public string Phone { get; set; }
 
         public ICollection<AuthorBook> AuthorsBooks { get; set; }

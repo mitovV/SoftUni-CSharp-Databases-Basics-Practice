@@ -13,7 +13,7 @@
 
         public DbSet<Author> Authors { get; set; }
 
-        public DbSet<AuthorBook> AuthorBooks { get; set; }
+        public DbSet<AuthorBook> AuthorsBooks { get; set; }
 
         public DbSet<Book> Books { get; set; }
 
