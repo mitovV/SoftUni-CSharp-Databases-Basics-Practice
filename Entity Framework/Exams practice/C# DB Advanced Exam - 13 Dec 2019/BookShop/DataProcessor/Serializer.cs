@@ -5,11 +5,12 @@
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Xml;
     using System.Xml.Serialization;
-    using BookShop.Data.Models.Enums;
-    using BookShop.DataProcessor.ExportDto;
+
     using Data;
+    using Data.Models.Enums;
+    using DataProcessor.ExportDto;
+
     using Newtonsoft.Json;
     using Formatting = Newtonsoft.Json.Formatting;
 
