@@ -127,8 +127,7 @@
 
             context.AuthorsBooks.AddRange(authorBooks);
             context.SaveChanges();
-            Console.WriteLine(context.Authors.Count());
-            Console.WriteLine(context.AuthorsBooks.Count());
+
             return sb.ToString().Trim();
         }
 
