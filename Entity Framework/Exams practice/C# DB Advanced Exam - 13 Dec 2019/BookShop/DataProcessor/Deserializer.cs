@@ -8,12 +8,14 @@
     using System.Linq;
     using System.Text;
     using System.Xml.Serialization;
-    using BookShop.Data.Models;
-    using BookShop.Data.Models.Enums;
-    using BookShop.DataProcessor.ImportDto;
-    using Data;
-    using Newtonsoft.Json;
     using ValidationContext = System.ComponentModel.DataAnnotations.ValidationContext;
+
+    using Data.Models;
+    using Data.Models.Enums;
+    using DataProcessor.ImportDto;
+    using Data;
+
+    using Newtonsoft.Json;
 
     public class Deserializer
     {
@@ -61,12 +63,9 @@
             return sb.ToString().Trim();
         }
 
-
-
         public static string ImportAuthors(BookShopContext context, string jsonString)
         {
             var dtos = JsonConvert.DeserializeObject<ImportAuthorDto[]>(jsonString);
-
 
             var sb = new StringBuilder();
             var authorBooks = new List<AuthorBook>();
@@ -84,7 +83,6 @@
                         Phone = dto.Phone,
                         Email = dto.Email
                     };
-
 
                     foreach (var bookDto in dto.Books)
                     {
