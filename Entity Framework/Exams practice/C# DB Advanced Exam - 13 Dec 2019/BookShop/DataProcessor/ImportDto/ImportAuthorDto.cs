@@ -3,8 +3,6 @@
     using System.ComponentModel.DataAnnotations;
     using System.Collections.Generic;
 
-    using Data.Models;
-
     public class ImportAuthorDto
     {
         [Required]
@@ -20,7 +18,7 @@
         public string Email { get; set; }
 
         [Required]
-        [StringLength(12, MinimumLength = 12)]
+        [RegularExpression("[0-9]{3}-[0-9]{3}-[0-9]{4}")]
         public string Phone { get; set; }
 
         public ICollection<ImportBookWithAuthorDto> Books { get; set; }

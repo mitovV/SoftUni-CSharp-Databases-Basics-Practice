@@ -1,5 +1,7 @@
 ﻿namespace BookShop.DataProcessor.ImportDto
 {
+    using BookShop.Data.Models.Enums;
+    using System;
     using System.ComponentModel.DataAnnotations;
     using System.Xml.Serialization;
 

@@ -29,25 +29,25 @@
         {
             var serializer = new XmlSerializer(typeof(ImportBookDto[]), new XmlRootAttribute("Books"));
 
-            var dtos = (ImportBookDto[])serializer.Deserialize(new StringReader(xmlString));
-
-            var sb = new StringBuilder();
+            var bookDtos = (ImportBookDto[])serializer.Deserialize(new StringReader(xmlString));
             var books = new List<Book>();
 
-            foreach (var dto in dtos)
+            var sb = new StringBuilder();
+
+            foreach (var bookDto in bookDtos)
             {
-                if (IsValid(dto))
+                if (IsValid(bookDto))
                 {
                     books.Add(new Book
                     {
-                        Name = dto.Name,
-                        Genre = (Genre)dto.Genre,
-                        Price = dto.Price,
-                        Pages = dto.Pages,
-                        PublishedOn = DateTime.Parse(dto.PublishedOn, CultureInfo.InvariantCulture)
+                        Name = bookDto.Name,
+                        Genre = (Genre)bookDto.Genre,
+                        Price = bookDto.Price,
+                        Pages = bookDto.Pages,
+                        PublishedOn = DateTime.Parse(bookDto.PublishedOn, CultureInfo.InvariantCulture)
                     });
 
-                    sb.AppendLine(string.Format(SuccessfullyImportedBook, dto.Name, dto.Price));
+                    sb.AppendLine(string.Format(SuccessfullyImportedBook, bookDto.Name, bookDto.Price));
                 }
                 else
                 {
@@ -60,6 +60,8 @@
 
             return sb.ToString().Trim();
         }
+
+
 
         public static string ImportAuthors(BookShopContext context, string jsonString)
         {
@@ -75,7 +77,14 @@
                 {
                     var booksCount = 0;
 
-                    var fullName = string.Empty;
+                    var author = new Author
+                    {
+                        FirstName = dto.FirstName,
+                        LastName = dto.LastName,
+                        Phone = dto.Phone,
+                        Email = dto.Email
+                    };
+
 
                     foreach (var bookDto in dto.Books)
                     {
@@ -83,17 +92,11 @@
                         {
                             booksCount++;
 
-                            var author = new Author
+                            if (booksCount == 1)
                             {
-                                FirstName = dto.FirstName,
-                                LastName = dto.LastName,
-                                Phone = dto.Phone,
-                                Email = dto.Email
-                            };
-
-                            context.Authors.Add(author);
-
-                            fullName = author.FirstName + " " + author.LastName;
+                                context.Authors.Add(author);
+                                context.SaveChanges();
+                            }
 
                             var authorBook = new AuthorBook
                             {
@@ -111,6 +114,8 @@
                     }
                     else
                     {
+                        var fullName = author.FirstName + " " + author.LastName;
+
                         sb.AppendLine(string.Format(SuccessfullyImportedAuthor, fullName, booksCount));
                     }
                 }
@@ -122,7 +127,8 @@
 
             context.AuthorsBooks.AddRange(authorBooks);
             context.SaveChanges();
-
+            Console.WriteLine(context.Authors.Count());
+            Console.WriteLine(context.AuthorsBooks.Count());
             return sb.ToString().Trim();
         }
 

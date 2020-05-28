@@ -5,6 +5,11 @@
 
     public class Author
     {
+        public Author()
+        {
+            this.AuthorsBooks = new HashSet<AuthorBook>();
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -21,7 +26,7 @@
         public string Email { get; set; }
 
         [Required]
-        [StringLength(12, MinimumLength =12)]
+        [RegularExpression("[0-9]{3}-[0-9]{3}-[0-9]{4}")]
         public string Phone { get; set; }
 
         public ICollection<AuthorBook> AuthorsBooks { get; set; }
