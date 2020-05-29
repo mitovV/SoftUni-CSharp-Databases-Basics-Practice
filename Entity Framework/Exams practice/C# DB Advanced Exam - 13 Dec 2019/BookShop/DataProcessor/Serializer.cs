@@ -52,7 +52,7 @@
                     Date = b.PublishedOn.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
                 })
                 .OrderByDescending(b => b.Pages)
-                .ThenBy(b => b.Date)
+                .ThenByDescending(b => b.Date)
                 .Take(10)
                 .ToArray();
 
