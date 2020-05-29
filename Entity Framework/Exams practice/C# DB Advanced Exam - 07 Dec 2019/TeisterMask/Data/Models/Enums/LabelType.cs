@@ -2,10 +2,10 @@
 {
     public enum LabelType
     {
-        Priority = 1,
-        CSharpAdvanced = 2,
-        JavaAdvanced = 3,
-        EntityFramework = 4,
-        Hibernate = 5
+        Priority = 0,
+        CSharpAdvanced = 1,
+        JavaAdvanced = 2,
+        EntityFramework = 3,
+        Hibernate = 4
     }
 }

@@ -8,6 +8,11 @@
 
     public class Task
     {
+        public Task()
+        {
+            this.EmployeesTasks = new HashSet<EmployeeTask>();
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -32,6 +37,6 @@
 
         public Project Project { get; set; }
 
-        public ICollection<EmployeeTask> EmployeesTasks { get; set; } = new HashSet<EmployeeTask>();
+        public ICollection<EmployeeTask> EmployeesTasks { get; set; }
     }
 }

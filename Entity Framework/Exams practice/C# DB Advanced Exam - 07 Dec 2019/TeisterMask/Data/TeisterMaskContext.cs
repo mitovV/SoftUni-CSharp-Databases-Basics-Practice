@@ -1,7 +1,8 @@
 ﻿namespace TeisterMask.Data
 {
     using Microsoft.EntityFrameworkCore;
-    using TeisterMask.Data.Models;
+
+    using Data.Models;
 
     public class TeisterMaskContext : DbContext
     {

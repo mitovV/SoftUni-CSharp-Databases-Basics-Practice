@@ -2,9 +2,9 @@
 {
     public enum ExecutionType
     {
-        ProductBacklog = 1,
-        SprintBacklog = 2,
-        InProgress = 3,
-        Finished = 4
+        ProductBacklog = 0,
+        SprintBacklog = 1,
+        InProgress = 2,
+        Finished = 3
     }
 }
