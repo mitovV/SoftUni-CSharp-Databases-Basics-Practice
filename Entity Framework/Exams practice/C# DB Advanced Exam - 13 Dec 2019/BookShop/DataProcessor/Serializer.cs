@@ -44,7 +44,7 @@
         {
             var books = context
                 .Books
-                .Where(b => b.PublishedOn < date && b.Genre == (Genre)3)
+                .Where(b => b.PublishedOn.Ticks < date.Ticks && b.Genre.ToString() == "Science")
                 .Select(b => new ExportOldestBookDto
                 {
                     Name = b.Name,

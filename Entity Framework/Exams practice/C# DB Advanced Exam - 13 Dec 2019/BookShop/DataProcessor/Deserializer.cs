@@ -74,47 +74,55 @@
             {
                 if (IsValid(dto))
                 {
-                    var booksCount = 0;
-
-                    var author = new Author
-                    {
-                        FirstName = dto.FirstName,
-                        LastName = dto.LastName,
-                        Phone = dto.Phone,
-                        Email = dto.Email
-                    };
-
-                    foreach (var bookDto in dto.Books)
-                    {
-                        if (context.Books.Any(b => b.Id == bookDto.Id))
-                        {
-                            booksCount++;
-
-                            if (booksCount == 1)
-                            {
-                                context.Authors.Add(author);
-                                context.SaveChanges();
-                            }
-
-                            var authorBook = new AuthorBook
-                            {
-                                AuthorId = author.Id,
-                                BookId = (int)bookDto.Id
-                            };
-
-                            authorBooks.Add(authorBook);
-                        }
-                    }
-
-                    if (booksCount == 0)
+                    if (context.Authors.Any(a => a.Email == dto.Email))
                     {
                         sb.AppendLine(ErrorMessage);
                     }
                     else
                     {
-                        var fullName = author.FirstName + " " + author.LastName;
 
-                        sb.AppendLine(string.Format(SuccessfullyImportedAuthor, fullName, booksCount));
+                        var booksCount = 0;
+
+                        var author = new Author
+                        {
+                            FirstName = dto.FirstName,
+                            LastName = dto.LastName,
+                            Phone = dto.Phone,
+                            Email = dto.Email
+                        };
+
+                        foreach (var bookDto in dto.Books)
+                        {
+                            if (context.Books.Any(b => b.Id == bookDto.Id))
+                            {
+                                booksCount++;
+
+                                if (booksCount == 1)
+                                {
+                                    context.Authors.Add(author);
+                                    context.SaveChanges();
+                                }
+
+                                var authorBook = new AuthorBook
+                                {
+                                    AuthorId = author.Id,
+                                    BookId = (int)bookDto.Id
+                                };
+
+                                authorBooks.Add(authorBook);
+                            }
+                        }
+
+                        if (booksCount == 0)
+                        {
+                            sb.AppendLine(ErrorMessage);
+                        }
+                        else
+                        {
+                            var fullName = author.FirstName + " " + author.LastName;
+
+                            sb.AppendLine(string.Format(SuccessfullyImportedAuthor, fullName, booksCount));
+                        }
                     }
                 }
                 else
