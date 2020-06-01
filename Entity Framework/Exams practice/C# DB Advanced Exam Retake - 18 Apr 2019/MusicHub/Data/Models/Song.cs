@@ -37,6 +37,7 @@
         [Range(typeof(string), "0", "79228162514264337593543950335")]
         public decimal Price { get; set; }
 
-        public ICollection<SongPerformer> SongPerformers { get; set; }
+        public ICollection<SongPerformer> SongPerformers { get; set; } 
+            = new HashSet<SongPerformer>();
     }
 }

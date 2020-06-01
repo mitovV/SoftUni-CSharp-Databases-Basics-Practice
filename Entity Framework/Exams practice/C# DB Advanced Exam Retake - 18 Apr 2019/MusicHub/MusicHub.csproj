@@ -12,9 +12,4 @@
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DataProcessor\ImportDtos\" />
-    <Folder Include="ImportResults\" />
-  </ItemGroup>
-
 </Project>

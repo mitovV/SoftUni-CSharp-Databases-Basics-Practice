@@ -24,6 +24,7 @@
         [Required]
         public Producer Producer { get; set; }
 
-        public ICollection<Song> Songs { get; set; }
+        public ICollection<Song> Songs { get; set; } 
+            = new HashSet<Song>();
     }
 }

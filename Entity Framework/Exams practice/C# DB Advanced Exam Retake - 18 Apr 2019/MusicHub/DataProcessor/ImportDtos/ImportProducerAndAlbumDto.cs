@@ -1,13 +1,9 @@
-﻿namespace MusicHub.Data.Models
+﻿namespace MusicHub.DataProcessor.ImportDtos
 {
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    public class Producer
+    public class ImportProducerAndAlbumDto
     {
-        [Key]
-        public int Id { get; set; }
-
         [Required]
         [StringLength(30, MinimumLength = 3)]
         public string Name { get; set; }
@@ -18,7 +14,6 @@
         [RegularExpression(@"\+359 [0-9]{3} [0-9]{3} [0-9]{3}")]
         public string PhoneNumber { get; set; }
 
-        public ICollection<Album> Albums { get; set; } 
-            = new HashSet<Album>();
+        public ImportAlbumDto[] Albums { get; set; }
     }
 }
