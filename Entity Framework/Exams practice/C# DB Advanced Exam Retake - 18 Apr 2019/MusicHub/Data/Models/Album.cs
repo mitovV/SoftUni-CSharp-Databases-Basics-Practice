@@ -19,7 +19,7 @@
 
         public decimal Price => this.Songs.Sum(s => s.Price);
 
-        public int ProducerId { get; set; }
+        public int? ProducerId { get; set; }
 
         [Required]
         public Producer Producer { get; set; }
